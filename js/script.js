@@ -139,7 +139,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Initialize EmailJS
 (function() {
-    emailjs.init('C0s6AJJhqkEqzPfti'); // Replace with your EmailJS public key
+    emailjs.init({
+        publicKey: 'C0s6AJJhqkEqzPfti',
+        blockHeadless: true,
+        limitRate: {
+            id: 'app',
+            throttle: 10000,
+        },
+    });
 })();
 
 // Contact Form Functionality
@@ -160,30 +167,33 @@ document.addEventListener('DOMContentLoaded', () => {
             // Get form data
             const formData = new FormData(contactForm);
             const templateParams = {
-                to_email: 'faisalsb0348@gmail.com',
+                to_name: 'AHS Consultancy',
                 from_name: formData.get('name'),
                 from_email: formData.get('email'),
                 phone: formData.get('phone') || 'Not provided',
                 service: formData.get('service'),
-                message: formData.get('message'),
-                reply_to: formData.get('email')
+                message: formData.get('message')
             };
             
             try {
+                console.log('Attempting to send email with params:', templateParams);
                 // Send email using EmailJS
-                await emailjs.send('service_wo3b3um', 'template_2d3l98h', templateParams);
+                const result = await emailjs.send('service_wo3b3um', 'template_2d3l98h', templateParams);
+                console.log('EmailJS Success:', result);
                 
                 // Show success message
                 showNotification('Message sent successfully! We\'ll get back to you within 24 hours.', 'success');
                 contactForm.reset();
                 
             } catch (error) {
-                console.error('EmailJS Error:', error);
+                console.error('EmailJS Error Details:', error);
+                console.log('Error status:', error.status);
+                console.log('Error text:', error.text);
+                showNotification(`Email service error: ${error.text || error.message}. Opening email client as fallback.`, 'error');
                 // Fallback to mailto link
                 const subject = encodeURIComponent(`Contact Form: ${templateParams.service}`);
                 const body = encodeURIComponent(`Name: ${templateParams.from_name}\nEmail: ${templateParams.from_email}\nPhone: ${templateParams.phone}\nService: ${templateParams.service}\n\nMessage:\n${templateParams.message}`);
                 window.open(`mailto:faisalsb0348@gmail.com?subject=${subject}&body=${body}`);
-                showNotification('Opening email client. Please send the email to complete your request.', 'success');
             } finally {
                 // Reset button
                 submitBtn.innerHTML = originalText;
