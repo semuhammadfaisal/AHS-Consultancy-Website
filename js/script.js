@@ -137,17 +137,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// Initialize EmailJS
-(function() {
-    emailjs.init({
-        publicKey: 'M2tANZA0L6w3wlhmQ',
-        blockHeadless: true,
-        limitRate: {
-            id: 'app',
-            throttle: 10000,
+// Simple form submission without EmailJS
+function submitToFormspree(formData) {
+    return fetch('https://formspree.io/f/xpznvqko', {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json'
         },
+        body: formData
     });
-})();
+}
 
 // Contact Form Functionality
 document.addEventListener('DOMContentLoaded', () => {
@@ -176,24 +175,23 @@ document.addEventListener('DOMContentLoaded', () => {
             };
             
             try {
-                console.log('Attempting to send email with params:', templateParams);
-                // Send email using EmailJS
-                const result = await emailjs.send('service_wo3b3um', 'template_2d3l98h', templateParams);
-                console.log('EmailJS Success:', result);
+                // Try Formspree first (simpler alternative)
+                const response = await submitToFormspree(formData);
                 
-                // Show success message
-                showNotification('Message sent successfully! We\'ll get back to you within 24 hours.', 'success');
-                contactForm.reset();
+                if (response.ok) {
+                    showNotification('Message sent successfully! We\'ll get back to you within 24 hours.', 'success');
+                    contactForm.reset();
+                } else {
+                    throw new Error('Formspree failed');
+                }
                 
             } catch (error) {
-                console.error('EmailJS Error Details:', error);
-                console.log('Error status:', error.status);
-                console.log('Error text:', error.text);
-                showNotification(`Email service error: ${error.text || error.message}. Opening email client as fallback.`, 'error');
+                console.log('Using mailto fallback');
                 // Fallback to mailto link
-                const subject = encodeURIComponent(`Contact Form: ${templateParams.service}`);
-                const body = encodeURIComponent(`Name: ${templateParams.from_name}\nEmail: ${templateParams.from_email}\nPhone: ${templateParams.phone}\nService: ${templateParams.service}\n\nMessage:\n${templateParams.message}`);
+                const subject = encodeURIComponent(`Contact Form: ${formData.get('service')}`);
+                const body = encodeURIComponent(`Name: ${formData.get('name')}\nEmail: ${formData.get('email')}\nPhone: ${formData.get('phone')}\nService: ${formData.get('service')}\n\nMessage:\n${formData.get('message')}`);
                 window.open(`mailto:faisalsb0348@gmail.com?subject=${subject}&body=${body}`);
+                showNotification('Opening email client to send your message.', 'success');
             } finally {
                 // Reset button
                 submitBtn.innerHTML = originalText;
