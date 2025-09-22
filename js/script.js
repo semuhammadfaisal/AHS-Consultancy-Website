@@ -181,11 +181,11 @@ document.addEventListener('DOMContentLoaded', () => {
             window.open(mailtoLink);
             
             showNotification('Email client opened with your message. Please click Send to complete.', 'success');
-            contactForm.reset(); finally {
-                // Reset button
-                submitBtn.innerHTML = originalText;
-                submitBtn.disabled = false;
-            }
+            contactForm.reset();
+            
+            // Reset button
+            submitBtn.innerHTML = originalText;
+            submitBtn.disabled = false;
         });
     }
 });
