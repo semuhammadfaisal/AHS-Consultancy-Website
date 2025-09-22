@@ -191,13 +191,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     body: JSON.stringify({
                         service_id: 'service_wo3b3um',
                         template_id: 'template_2d3l98h',
-                        user_id: 'M2tANZA0L6w3wlhmQ',
+                        user_id: 'YOUR_PUBLIC_KEY_HERE',
                         template_params: {
                             from_name: formData.get('name'),
                             from_email: formData.get('email'),
                             phone: formData.get('phone'),
                             service: formData.get('service'),
-                            message: formData.get('message')
+                            message: formData.get('message'),
+                            email: 'faisalsb0348@gmail.com'
                         }
                     })
                 });
