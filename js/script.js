@@ -137,17 +137,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// Direct mailto solution - always works
-function createMailtoLink(formData) {
-    const subject = encodeURIComponent(`Contact Form: ${formData.get('service')}`);
-    const body = encodeURIComponent(
-        `Name: ${formData.get('name')}\n` +
-        `Email: ${formData.get('email')}\n` +
-        `Phone: ${formData.get('phone') || 'Not provided'}\n` +
-        `Service: ${formData.get('service')}\n\n` +
-        `Message:\n${formData.get('message')}`
-    );
-    return `mailto:faisalsb0348@gmail.com?subject=${subject}&body=${body}`;
+// Auto-send using Web3Forms
+async function sendEmail(formData) {
+    formData.append('access_key', 'c9e08ca4-190c-4832-b92e-2a998b5bb4c2');
+    formData.append('subject', `New Contact Form Submission - ${formData.get('service')}`);
+    formData.append('from_name', 'AHS Consultancy Website');
+    
+    const response = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        body: formData
+    });
+    
+    return response.json();
 }
 
 // Contact Form Functionality
@@ -176,16 +177,23 @@ document.addEventListener('DOMContentLoaded', () => {
                 message: formData.get('message')
             };
             
-            // Direct mailto solution - always works
-            const mailtoLink = createMailtoLink(formData);
-            window.open(mailtoLink);
-            
-            showNotification('Email client opened with your message. Please click Send to complete.', 'success');
-            contactForm.reset();
-            
-            // Reset button
-            submitBtn.innerHTML = originalText;
-            submitBtn.disabled = false;
+            try {
+                // Auto-send email
+                const result = await sendEmail(formData);
+                
+                if (result.success) {
+                    showNotification('Message sent successfully! We\'ll get back to you within 24 hours.', 'success');
+                    contactForm.reset();
+                } else {
+                    throw new Error('Failed to send');
+                }
+            } catch (error) {
+                showNotification('Failed to send message. Please try again.', 'error');
+            } finally {
+                // Reset button
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }
         });
     }
 });
