@@ -174,38 +174,57 @@ document.addEventListener('DOMContentLoaded', () => {
                 message: formData.get('message')
             };
             
-            // Simple email creation
-            const emailData = {
-                to: 'faisalsb0348@gmail.com',
-                subject: `Contact Form: ${formData.get('service')}`,
-                body: `Name: ${formData.get('name')}\nEmail: ${formData.get('email')}\nPhone: ${formData.get('phone')}\nService: ${formData.get('service')}\nMessage: ${formData.get('message')}`
-            };
-            
-            // Send to your email using EmailJS with correct setup
             try {
-                await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+                console.log('=== FORM SUBMISSION DEBUG ===');
+                console.log('Form data:', {
+                    name: formData.get('name'),
+                    email: formData.get('email'),
+                    phone: formData.get('phone'),
+                    service: formData.get('service'),
+                    message: formData.get('message')
+                });
+                
+                const emailPayload = {
+                    service_id: 'service_wo3b3um',
+                    template_id: 'template_2d3l98h',
+                    user_id: 'M2tANZA0L6w3wlhmQ',
+                    template_params: {
+                        from_name: formData.get('name'),
+                        from_email: formData.get('email'),
+                        phone: formData.get('phone'),
+                        service: formData.get('service'),
+                        message: formData.get('message')
+                    }
+                };
+                
+                console.log('EmailJS payload:', emailPayload);
+                
+                const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({
-                        service_id: 'service_wo3b3um',
-                        template_id: 'template_2d3l98h',
-                        user_id: 'YOUR_PUBLIC_KEY_HERE',
-                        template_params: {
-                            from_name: formData.get('name'),
-                            from_email: formData.get('email'),
-                            phone: formData.get('phone'),
-                            service: formData.get('service'),
-                            message: formData.get('message')
-                        }
-                    })
+                    body: JSON.stringify(emailPayload)
                 });
                 
-                showNotification('Message sent successfully! We\'ll get back to you within 24 hours.', 'success');
+                console.log('Response status:', response.status);
+                console.log('Response ok:', response.ok);
+                
+                const responseText = await response.text();
+                console.log('Response text:', responseText);
+                
+                if (response.ok) {
+                    console.log('✅ EMAIL SENT SUCCESSFULLY');
+                    showNotification('Message sent successfully! We\'ll get back to you within 24 hours.', 'success');
+                } else {
+                    console.log('❌ EMAIL FAILED:', responseText);
+                    showNotification('Failed to send message: ' + responseText, 'error');
+                }
+                
                 contactForm.reset();
             } catch (error) {
-                showNotification('Message sent successfully! We\'ll get back to you within 24 hours.', 'success');
+                console.log('❌ CATCH ERROR:', error);
+                showNotification('Error: ' + error.message, 'error');
                 contactForm.reset();
             } finally {
                 // Reset button
