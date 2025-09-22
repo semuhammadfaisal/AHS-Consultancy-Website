@@ -35,7 +35,7 @@ vercel --prod
 4. Verify email delivery works on live site
 
 ## Current Configuration:
-- EmailJS Public Key: `C0s6AJJhqkEqzPfti`
+- EmailJS Public Key: `M2tANZA0L6w3wlhmQ`
 - Service ID: `service_wo3b3um`
 - Template ID: `template_2d3l98h`
 - Target Email: `faisalsb0348@gmail.com`

@@ -140,7 +140,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // Initialize EmailJS
 (function() {
     emailjs.init({
-        publicKey: 'C0s6AJJhqkEqzPfti',
+        publicKey: 'M2tANZA0L6w3wlhmQ',
         blockHeadless: true,
         limitRate: {
             id: 'app',
