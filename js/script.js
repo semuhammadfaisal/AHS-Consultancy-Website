@@ -137,15 +137,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// Simple form submission without EmailJS
-function submitToFormspree(formData) {
-    return fetch('https://formspree.io/f/xpznvqko', {
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json'
-        },
-        body: formData
-    });
+// Direct mailto solution - always works
+function createMailtoLink(formData) {
+    const subject = encodeURIComponent(`Contact Form: ${formData.get('service')}`);
+    const body = encodeURIComponent(
+        `Name: ${formData.get('name')}\n` +
+        `Email: ${formData.get('email')}\n` +
+        `Phone: ${formData.get('phone') || 'Not provided'}\n` +
+        `Service: ${formData.get('service')}\n\n` +
+        `Message:\n${formData.get('message')}`
+    );
+    return `mailto:faisalsb0348@gmail.com?subject=${subject}&body=${body}`;
 }
 
 // Contact Form Functionality
@@ -174,25 +176,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 message: formData.get('message')
             };
             
-            try {
-                // Try Formspree first (simpler alternative)
-                const response = await submitToFormspree(formData);
-                
-                if (response.ok) {
-                    showNotification('Message sent successfully! We\'ll get back to you within 24 hours.', 'success');
-                    contactForm.reset();
-                } else {
-                    throw new Error('Formspree failed');
-                }
-                
-            } catch (error) {
-                console.log('Using mailto fallback');
-                // Fallback to mailto link
-                const subject = encodeURIComponent(`Contact Form: ${formData.get('service')}`);
-                const body = encodeURIComponent(`Name: ${formData.get('name')}\nEmail: ${formData.get('email')}\nPhone: ${formData.get('phone')}\nService: ${formData.get('service')}\n\nMessage:\n${formData.get('message')}`);
-                window.open(`mailto:faisalsb0348@gmail.com?subject=${subject}&body=${body}`);
-                showNotification('Opening email client to send your message.', 'success');
-            } finally {
+            // Direct mailto solution - always works
+            const mailtoLink = createMailtoLink(formData);
+            window.open(mailtoLink);
+            
+            showNotification('Email client opened with your message. Please click Send to complete.', 'success');
+            contactForm.reset(); finally {
                 // Reset button
                 submitBtn.innerHTML = originalText;
                 submitBtn.disabled = false;
