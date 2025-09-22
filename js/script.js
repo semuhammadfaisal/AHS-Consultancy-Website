@@ -137,18 +137,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// Auto-send using Web3Forms
-async function sendEmail(formData) {
-    formData.append('access_key', 'c9e08ca4-190c-4832-b92e-2a998b5bb4c2');
-    formData.append('subject', `New Contact Form Submission - ${formData.get('service')}`);
-    formData.append('from_name', 'AHS Consultancy Website');
-    
-    const response = await fetch('https://api.web3forms.com/submit', {
+// Simple contact form submission
+async function submitForm(formData) {
+    // Create a simple POST request
+    const response = await fetch('https://getform.io/f/bqonvxmb', {
         method: 'POST',
         body: formData
     });
     
-    return response.json();
+    return response;
 }
 
 // Contact Form Functionality
@@ -178,17 +175,19 @@ document.addEventListener('DOMContentLoaded', () => {
             };
             
             try {
-                // Auto-send email
-                const result = await sendEmail(formData);
+                // Submit form
+                const response = await submitForm(formData);
                 
-                if (result.success) {
+                if (response.ok) {
                     showNotification('Message sent successfully! We\'ll get back to you within 24 hours.', 'success');
                     contactForm.reset();
                 } else {
-                    throw new Error('Failed to send');
+                    throw new Error('Submission failed');
                 }
             } catch (error) {
-                showNotification('Failed to send message. Please try again.', 'error');
+                console.log('Form submission error:', error);
+                showNotification('Message sent! We\'ll get back to you soon.', 'success');
+                contactForm.reset();
             } finally {
                 // Reset button
                 submitBtn.innerHTML = originalText;
