@@ -197,8 +197,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             from_email: formData.get('email'),
                             phone: formData.get('phone'),
                             service: formData.get('service'),
-                            message: formData.get('message'),
-                            email: 'faisalsb0348@gmail.com'
+                            message: formData.get('message')
                         }
                     })
                 });
