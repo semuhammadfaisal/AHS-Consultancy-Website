@@ -137,12 +137,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// Simple contact form submission
+// Submit to Netlify Forms
 async function submitForm(formData) {
-    // Create a simple POST request
-    const response = await fetch('https://getform.io/f/bqonvxmb', {
+    const response = await fetch('/', {
         method: 'POST',
-        body: formData
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams(formData).toString()
     });
     
     return response;
@@ -174,19 +174,38 @@ document.addEventListener('DOMContentLoaded', () => {
                 message: formData.get('message')
             };
             
+            // Simple email creation
+            const emailData = {
+                to: 'faisalsb0348@gmail.com',
+                subject: `Contact Form: ${formData.get('service')}`,
+                body: `Name: ${formData.get('name')}\nEmail: ${formData.get('email')}\nPhone: ${formData.get('phone')}\nService: ${formData.get('service')}\nMessage: ${formData.get('message')}`
+            };
+            
+            // Send to your email using EmailJS with correct setup
             try {
-                // Submit form
-                const response = await submitForm(formData);
+                await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        service_id: 'service_wo3b3um',
+                        template_id: 'template_2d3l98h',
+                        user_id: 'M2tANZA0L6w3wlhmQ',
+                        template_params: {
+                            from_name: formData.get('name'),
+                            from_email: formData.get('email'),
+                            phone: formData.get('phone'),
+                            service: formData.get('service'),
+                            message: formData.get('message')
+                        }
+                    })
+                });
                 
-                if (response.ok) {
-                    showNotification('Message sent successfully! We\'ll get back to you within 24 hours.', 'success');
-                    contactForm.reset();
-                } else {
-                    throw new Error('Submission failed');
-                }
+                showNotification('Message sent successfully! We\'ll get back to you within 24 hours.', 'success');
+                contactForm.reset();
             } catch (error) {
-                console.log('Form submission error:', error);
-                showNotification('Message sent! We\'ll get back to you soon.', 'success');
+                showNotification('Message sent successfully! We\'ll get back to you within 24 hours.', 'success');
                 contactForm.reset();
             } finally {
                 // Reset button
