@@ -1,7 +1,0 @@
-{
-  "functions": {
-    "js/script.js": {
-      "runtime": "@vercel/static"
-    }
-  }
-}
