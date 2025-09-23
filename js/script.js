@@ -106,6 +106,21 @@ function animateCounter(element, target, duration = 2000) {
     }, 16);
 }
 
+// Stats counter animation
+function animateStatCounter(element, target) {
+    let current = 0;
+    const increment = target / 60; // 60 frames for smooth animation
+    const timer = setInterval(() => {
+        current += increment;
+        if (current >= target) {
+            element.firstChild.textContent = target >= 1000 ? target.toLocaleString() : target;
+            clearInterval(timer);
+        } else {
+            element.firstChild.textContent = Math.floor(current) >= 1000 ? Math.floor(current).toLocaleString() : Math.floor(current);
+        }
+    }, 16); // ~60fps
+}
+
 // Observe stats for counter animation
 const statsObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
@@ -113,17 +128,17 @@ const statsObserver = new IntersectionObserver((entries) => {
             const statNumbers = entry.target.querySelectorAll('.stat-number[data-target]');
             statNumbers.forEach(stat => {
                 const target = parseInt(stat.getAttribute('data-target'));
-                animateCounter(stat, target);
+                animateStatCounter(stat, target);
             });
             statsObserver.unobserve(entry.target);
         }
     });
-}, { threshold: 0.5 });
+}, { threshold: 0.3 });
 
 // Observe elements for animation
 document.addEventListener('DOMContentLoaded', () => {
     const animateElements = document.querySelectorAll('.feature, .service-card, .step, .contact-item');
-    const heroStats = document.querySelector('.hero-stats');
+    const statsSection = document.querySelector('.stats-section');
     
     animateElements.forEach(el => {
         el.style.opacity = '0';
@@ -132,8 +147,8 @@ document.addEventListener('DOMContentLoaded', () => {
         observer.observe(el);
     });
     
-    if (heroStats) {
-        statsObserver.observe(heroStats);
+    if (statsSection) {
+        statsObserver.observe(statsSection);
     }
 });
 
