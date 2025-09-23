@@ -1,8 +1,7 @@
 {
-  "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/index.html"
+  "functions": {
+    "js/script.js": {
+      "runtime": "@vercel/static"
     }
-  ]
+  }
 }
