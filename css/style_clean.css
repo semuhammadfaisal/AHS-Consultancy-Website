@@ -2153,7 +2153,6 @@ h2 {
     section {
         padding: 60px 0;
     }
-}
 
 /* Large Devices (desktops, 1025px and up) */
 @media (min-width: 1025px) {
@@ -3387,4 +3386,113 @@ h2 {
     .footer-contact {
         align-items: center;
     }
+}
+
+/* International Section */
+.international {
+    background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+    padding: 100px 0;
+    position: relative;
+}
+
+.international-header {
+    text-align: center;
+    margin-bottom: 4rem;
+}
+
+.international h2 {
+    color: #1e293b;
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.international-description {
+    font-size: 1.2rem;
+    color: #64748b;
+    line-height: 1.7;
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.countries-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.country-item {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 0.8rem 1.2rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    white-space: nowrap;
+}
+
+.country-item:hover {
+    transform: translateY(-4px);
+    border-color: #00ff85;
+    box-shadow: 0 8px 25px rgba(0, 255, 133, 0.15);
+}
+
+.country-flag {
+    display: none;
+}
+
+.country-item span {
+    color: #374151;
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.more-countries {
+    background: linear-gradient(135deg, #00ff85, #00c46b);
+    border-color: #00ff85;
+    color: #ffffff;
+}
+
+.more-countries span {
+    color: #ffffff;
+    font-weight: 600;
+}
+
+@media (max-width: 768px) {
+    .international {
+        padding: 80px 0;
+    }
+    
+    .international h2 {
+        font-size: 2rem;
+    }
+    
+    .countries-grid {
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 1rem;
+    }
+    
+    .country-item {
+        padding: 1rem 0.8rem;
+    }
+    
+    .country-flag {
+        font-size: 2rem;
+    }
+}
+.service-badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: linear-gradient(135deg, #00ff85, #00c46b);
+    color: #111;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(0, 255, 133, 0.3);
 }
